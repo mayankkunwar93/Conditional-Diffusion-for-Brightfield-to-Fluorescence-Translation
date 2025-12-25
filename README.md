@@ -1,21 +1,43 @@
-# Conditional-Diffusion-for-Brightfield-to-Fluorescence-Translation
-Conditional diffusion model for translating brightfield microscopy images into red and green fluorescence channels.
-Conditional Diffusion for Brightfield to Fluorescence Translation
+🧬 Conditional Diffusion for Brightfield → Fluorescence Translation
 
-This repository implements a conditional diffusion (DDPM) model to translate Brightfield (BF) microscopy images into corresponding fluorescence images (Red or Green channels).
+This repository implements a conditional diffusion (DDPM) model to translate
+Brightfield (BF) microscopy images into corresponding fluorescence images
+(Red or Green channels).
 
-The approach enables virtual fluorescence microscopy, reducing the need for physical staining, long acquisition times, and phototoxic effects.
+✨ This enables virtual fluorescence microscopy, reducing:
 
-Problem Statement
+Physical staining requirements
 
-Fluorescence microscopy provides rich biological information but is expensive and time-consuming.
+Long acquisition times
 
-Goal:
-Learn a conditional generative model that predicts fluorescence images from a given Brightfield image and a specified fluorescence channel (Red or Green).
+Phototoxic effects
 
-Key Idea
+🔬 Problem Statement
 
-Instead of directly predicting fluorescence images, the model learns to iteratively denoise fluorescence images conditioned on:
+Fluorescence microscopy provides rich biological insights, but it is:
+
+Expensive
+
+Time-consuming
+
+Potentially harmful to live samples
+
+🎯 Goal
+
+Learn a conditional generative model that predicts fluorescence images from:
+
+A Brightfield image
+
+A specified fluorescence channel (Red or Green)
+
+💡 Key Idea
+
+Instead of directly predicting fluorescence images, the model learns to:
+
+Iteratively denoise fluorescence images
+while conditioning on structural and modality information
+
+The conditioning includes:
 
 Brightfield image structure
 
@@ -23,31 +45,33 @@ Desired fluorescence channel (Red / Green)
 
 This is achieved using a conditional denoising diffusion probabilistic model (DDPM).
 
-Model Overview
-Input to the Network (6 Channels)
+🧠 Model Overview
+🔹 Input to the Network (6 Channels)
 
-Noisy fluorescence image (1 channel)
+Noisy fluorescence image — 1 channel
 
-Brightfield RGB image (3 channels)
+Brightfield RGB image — 3 channels
 
-Condition map (Red / Green one-hot, broadcast spatially) (2 channels)
+Condition map (Red / Green one-hot, spatially broadcast) — 2 channels
 
 Total input shape:
 
 [6, 256, 256]
 
-Backbone
+🔹 Backbone Network
 
 Conditional UNet
 
-Predicts the noise added at each diffusion step
+Predicts the noise added at each diffusion timestep
 
-Diffusion Process (Plain Explanation)
-Forward Diffusion
+🔁 Diffusion Process (Plain Explanation)
+➕ Forward Diffusion
 
-Noise is gradually added to a clean fluorescence image over multiple timesteps until it becomes pure Gaussian noise.
+Noise is gradually added to a clean fluorescence image
 
-Reverse Diffusion
+After many steps, the image becomes pure Gaussian noise
+
+➖ Reverse Diffusion
 
 Starting from random noise, the model:
 
@@ -61,12 +85,12 @@ Brightfield image
 
 Fluorescence channel (Red or Green)
 
-Dataset
+📦 Dataset
 
 Source:
-Kaggle – Brightfield vs Fluorescent Staining Dataset
+🔗 Kaggle – Brightfield vs Fluorescent Staining Dataset
 
-Dataset Split:
+📊 Dataset Split
 
 Training: 159 samples
 
@@ -74,44 +98,44 @@ Validation: 42 samples
 
 Testing: 51 samples (held-out environment)
 
-Preprocessing:
+🧹 Preprocessing
 
 Resize images to 256 × 256
 
-Normalize pixel values to range [-1, 1]
+Normalize pixel values to [-1, 1]
 
 One fluorescence channel selected per training iteration
 
-Training Details
+⚙️ Training Details
 
 Optimizer: AdamW
 
-Training epochs: 100
+Epochs: 100
 
-Exponential Moving Average (EMA) of model weights
+EMA (Exponential Moving Average) applied to model weights
 
-EMA weights used for inference to improve stability
+EMA weights used during inference for stable and smooth outputs
 
-Loss Functions
-1. Denoising Loss
+🎯 Loss Functions
+1️⃣ Denoising Loss
 
-L1 loss between predicted noise and true noise
+L1 loss between predicted and true noise
 
 Encourages accurate diffusion step prediction
 
-2. Perceptual Loss
+2️⃣ Perceptual Loss
 
 VGG16 feature-based loss
 
-Encourages preservation of biologically meaningful structures
+Preserves biologically meaningful structures
 
-Total Loss
+🔢 Total Loss
 
-Total loss = Denoising loss + 0.01 × Perceptual loss
+Total = Denoising loss + 0.01 × Perceptual loss
 
-Inference
+🚀 Inference
 
-At inference time:
+During inference:
 
 Start from random Gaussian noise
 
@@ -123,14 +147,14 @@ Brightfield image
 
 Selected fluorescence channel (Red or Green)
 
-The model can generate different valid fluorescence samples from the same Brightfield input.
+✨ The model can generate multiple valid fluorescence samples from the same Brightfield input.
 
-Results
+📈 Results
 
 Stable convergence over 100 epochs
 
-Realistic fluorescence structure aligned with Brightfield morphology
+Fluorescence structures align well with Brightfield morphology
 
-Successful generation of both Red and Green fluorescence channels from a single Brightfield image
+Successful generation of both Red and Green channels from a single BF image
 
-Example predictions and loss curves are included in the notebook.
+📌 Example predictions and loss curves are included in the notebook.
